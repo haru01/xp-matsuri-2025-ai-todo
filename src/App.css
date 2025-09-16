@@ -1,0 +1,114 @@
+.app {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.app-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.app-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #3b82f6;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.app-main {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.app-content {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 2rem;
+  min-height: 600px;
+}
+
+.todo-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-section {
+  min-height: 600px;
+}
+
+@media (max-width: 1024px) {
+  .app-content {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .chat-section {
+    min-height: 400px;
+  }
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: #6b7280;
+}
+
+.error {
+  background: #fee;
+  border: 1px solid #fcc;
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+  color: #991b1b;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-around;
+  padding: 1rem;
+  margin: 1rem 0;
+  background: #f3f4f6;
+  border-radius: 8px;
+  font-size: 0.875rem;
+}
+
+.stats span {
+  color: #4b5563;
+  font-weight: 500;
+}
+
+@media (prefers-color-scheme: dark) {
+  .app-main {
+    background: #27272a;
+  }
+
+  .app-header h1 {
+    color: #60a5fa;
+  }
+
+  .subtitle {
+    color: #a1a1aa;
+  }
+
+  .stats {
+    background: #3f3f46;
+  }
+
+  .stats span {
+    color: #d4d4d8;
+  }
+
+  .error {
+    background: #7f1d1d;
+    border-color: #991b1b;
+    color: #fecaca;
+  }
+}
