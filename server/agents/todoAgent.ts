@@ -75,7 +75,7 @@ class TodoAgent {
       console.log('Generating streaming response for message:', userMessage);
 
       // V2モデル（Gemini等）の場合はstreamVNextを使用
-      const useVNext = ['gemini', 'google'].includes(this.providerInfo.provider.toLowerCase());
+      const useVNext = ['gemini', 'google', 'openai', 'anthropic'].includes(this.providerInfo.provider.toLowerCase());
 
       const messages = [
         { role: 'system', content: systemPrompt },
