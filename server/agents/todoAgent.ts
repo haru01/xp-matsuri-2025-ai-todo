@@ -48,22 +48,6 @@ class TodoAgent {
     }
   }
 
-  async generateResponse(userMessage: string, todos: Todo[]): Promise<string> {
-    try {
-      const systemPrompt = createSystemPrompt(todos);
-
-      const result = await this.agent.generate([
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userMessage }
-      ]);
-
-      return result.text;
-    } catch (error) {
-      console.error('Error generating response:', error);
-      throw new Error(`エージェントの応答生成に失敗しました: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    }
-  }
-
   async generateStreamingResponse(
     userMessage: string,
     todos: Todo[],
