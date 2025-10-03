@@ -22,6 +22,27 @@
   flex: 1;
 }
 
+.dragHandle {
+  background: transparent;
+  border: none;
+  color: #9ca3af;
+  cursor: grab;
+  padding: 0.25rem;
+  font-size: 1.25rem;
+  line-height: 1;
+  transition: color 0.2s;
+  touch-action: none;
+  user-select: none;
+}
+
+.dragHandle:hover {
+  color: #3b82f6;
+}
+
+.dragHandle:active {
+  cursor: grabbing;
+}
+
 .checkbox {
   width: 1.25rem;
   height: 1.25rem;

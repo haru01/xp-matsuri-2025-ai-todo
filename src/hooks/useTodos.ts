@@ -33,7 +33,7 @@ export const useTodos = () => {
     }
   }, []);
 
-  const updateTodo = useCallback(async (id: number, input: UpdateTodoInput) => {
+  const updateTodo = useCallback(async (id: string | number, input: UpdateTodoInput) => {
     try {
       const updatedTodo = await todoApi.update(id, input);
       setTodos(prev => prev.map(todo =>
@@ -47,7 +47,7 @@ export const useTodos = () => {
     }
   }, []);
 
-  const deleteTodo = useCallback(async (id: number) => {
+  const deleteTodo = useCallback(async (id: string | number) => {
     try {
       await todoApi.delete(id);
       setTodos(prev => prev.filter(todo => todo.id !== id));
@@ -58,12 +58,30 @@ export const useTodos = () => {
     }
   }, []);
 
-  const toggleTodo = useCallback(async (id: number) => {
+  const toggleTodo = useCallback(async (id: string | number) => {
     const todo = todos.find(t => t.id === id);
     if (todo) {
       await updateTodo(id, { completed: !todo.completed });
     }
   }, [todos, updateTodo]);
+
+  const reorderTodos = useCallback(async (reorderedTodos: Todo[]) => {
+    try {
+      const previousTodos = [...todos];
+      setTodos(reorderedTodos);
+
+      const updates = reorderedTodos.map((todo, index) => ({
+        id: String(todo.id),
+        order: index,
+      }));
+      await todoApi.reorderAll(updates);
+    } catch (err) {
+      setTodos(todos);
+      setError('TODOの並び替えに失敗しました');
+      console.error('Failed to reorder todos:', err);
+      throw err;
+    }
+  }, [todos]);
 
   useEffect(() => {
     fetchTodos();
@@ -77,6 +95,7 @@ export const useTodos = () => {
     updateTodo,
     deleteTodo,
     toggleTodo,
+    reorderTodos,
     refetch: fetchTodos,
   };
 };

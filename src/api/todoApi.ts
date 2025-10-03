@@ -21,17 +21,24 @@ export const todoApi = {
       ...input,
       completed: false,
       createdAt: new Date().toISOString(),
+      order: 0,
     };
     const response = await api.post<Todo>('/todos', newTodo);
     return response.data;
   },
 
-  async update(id: number, input: UpdateTodoInput): Promise<Todo> {
+  async update(id: string | number, input: UpdateTodoInput): Promise<Todo> {
     const response = await api.patch<Todo>(`/todos/${id}`, input);
     return response.data;
   },
 
-  async delete(id: number): Promise<void> {
+  async delete(id: string | number): Promise<void> {
     await api.delete(`/todos/${id}`);
+  },
+
+  async reorderAll(todos: { id: string; order: number }[]): Promise<void> {
+    await Promise.all(
+      todos.map(todo => api.patch(`/todos/${todo.id}`, { order: todo.order }))
+    );
   },
 };

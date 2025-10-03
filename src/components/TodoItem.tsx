@@ -1,14 +1,34 @@
 import React from 'react';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import type { Todo } from '../types/todo';
 import styles from './TodoItem.module.css';
 
 interface TodoItemProps {
   todo: Todo;
-  onToggle: (id: number) => Promise<void>;
-  onDelete: (id: number) => Promise<void>;
+  onToggle: (id: string | number) => Promise<void>;
+  onDelete: (id: string | number) => Promise<void>;
 }
 
 export const TodoItem: React.FC<TodoItemProps> = ({ todo, onToggle, onDelete }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: todo.id,
+    disabled: todo.completed,
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
   const handleToggle = () => {
     onToggle(todo.id);
   };
@@ -20,8 +40,18 @@ export const TodoItem: React.FC<TodoItemProps> = ({ todo, onToggle, onDelete }) 
   };
 
   return (
-    <li className={styles.todoItem}>
+    <li ref={setNodeRef} style={style} className={styles.todoItem}>
       <div className={styles.todoContent}>
+        {!todo.completed && (
+          <button
+            className={styles.dragHandle}
+            {...attributes}
+            {...listeners}
+            aria-label="ドラッグして並び替え"
+          >
+            ⋮⋮
+          </button>
+        )}
         <input
           type="checkbox"
           checked={todo.completed}

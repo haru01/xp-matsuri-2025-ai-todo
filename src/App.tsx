@@ -13,6 +13,7 @@ function App() {
     addTodo,
     toggleTodo,
     deleteTodo,
+    reorderTodos,
   } = useTodos();
 
   return (
@@ -51,6 +52,7 @@ function App() {
                     todos={todos}
                     onToggle={toggleTodo}
                     onDelete={deleteTodo}
+                    onReorder={reorderTodos}
                   />
                 </>
               )}

@@ -1,8 +1,9 @@
 export interface Todo {
-  id: number;
+  id: string | number;
   title: string;
   completed: boolean;
   createdAt: string;
+  order: number;
 }
 
 export interface CreateTodoInput {
