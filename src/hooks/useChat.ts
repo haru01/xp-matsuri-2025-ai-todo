@@ -1,15 +1,14 @@
 import { useEffect, useCallback, useRef } from 'react';
 import { Socket } from 'socket.io-client';
 import { useChatContext } from '../contexts/ChatContext';
-import { useTodos } from './useTodos';
 import { socketSingleton } from '../utils/socketSingleton';
+import type { Todo } from '../types/todo';
 
-export function useChat() {
+export function useChat(todos: Todo[]) {
   const context = useChatContext();
   const socketRef = useRef<Socket | null>(null);
   const currentStreamingMessageIdRef = useRef<string | null>(null);
 
-  const { todos } = useTodos();
   const { addMessage, updateMessage, setTyping, setConnected, setError } = context;
 
   // Store latest functions in refs to avoid stale closures
@@ -97,6 +96,7 @@ export function useChat() {
   }, []); // Empty dependency array to run only once
 
   const sendMessage = useCallback((message: string) => {
+    console.log('sendMessage called with todos:', todos);
     if (!socketRef.current || !socketRef.current.connected) {
       setError('Not connected to chat server');
       return;
@@ -109,12 +109,14 @@ export function useChat() {
     });
 
     // Send message with TODO context
+    const contextData = {
+      todos: todos,
+      timestamp: new Date().toISOString(),
+    };
+    console.log('Sending context:', contextData);
     socketRef.current.emit('chat_message', {
       message,
-      context: {
-        todos: todos,
-        timestamp: new Date().toISOString(),
-      },
+      context: contextData,
     });
 
     setError(null);

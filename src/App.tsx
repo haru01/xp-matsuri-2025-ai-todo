@@ -57,7 +57,7 @@ function App() {
             </div>
 
             <div className="chat-section">
-              <ChatInterface />
+              <ChatInterface todos={todos} />
             </div>
           </div>
         </main>

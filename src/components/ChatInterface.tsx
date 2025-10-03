@@ -2,16 +2,21 @@ import { useEffect, useRef } from 'react';
 import { ChatMessage } from './ChatMessage';
 import { ChatInput } from './ChatInput';
 import { useChat } from '../hooks/useChat';
+import type { Todo } from '../types/todo';
 import styles from './ChatInterface.module.css';
 
-export function ChatInterface() {
+interface ChatInterfaceProps {
+  todos: Todo[];
+}
+
+export function ChatInterface({ todos }: ChatInterfaceProps) {
   const {
     messages,
     isConnected,
     isTyping,
     error,
     sendMessage
-  } = useChat();
+  } = useChat(todos);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
