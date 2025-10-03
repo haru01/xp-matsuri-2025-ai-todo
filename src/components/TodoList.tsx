@@ -6,22 +6,22 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-  DragEndEvent,
 } from '@dnd-kit/core';
 import {
-  arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { TodoItem } from './TodoItem';
-import type { Todo } from '../types/todo';
+import type { Todo, TodoId } from '../types/todo';
+import { categorizeTodos } from '../utils/todoHelpers';
+import { useTodoReorder } from '../hooks/useTodoReorder';
 import styles from './TodoList.module.css';
 
 interface TodoListProps {
   todos: Todo[];
-  onToggle: (id: string | number) => Promise<void>;
-  onDelete: (id: string | number) => Promise<void>;
+  onToggle: (id: TodoId) => Promise<void>;
+  onDelete: (id: TodoId) => Promise<void>;
   onReorder: (reorderedTodos: Todo[]) => Promise<void>;
 }
 
@@ -46,27 +46,8 @@ export const TodoList: React.FC<TodoListProps> = ({ todos, onToggle, onDelete, o
     );
   }
 
-  const incompleteTodos = todos.filter(todo => !todo.completed).sort((a, b) => a.order - b.order);
-  const completedTodos = todos.filter(todo => todo.completed).sort((a, b) => a.order - b.order);
-
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-
-    if (over && active.id !== over.id) {
-      const oldIndex = incompleteTodos.findIndex(todo => todo.id === active.id);
-      const newIndex = incompleteTodos.findIndex(todo => todo.id === over.id);
-
-      const reordered = arrayMove(incompleteTodos, oldIndex, newIndex).map((todo, index) => ({
-        ...todo,
-        order: index,
-      }));
-      const allTodos = [...reordered, ...completedTodos.map((todo, index) => ({
-        ...todo,
-        order: reordered.length + index,
-      }))];
-      onReorder(allTodos);
-    }
-  };
+  const { incomplete: incompleteTodos, completed: completedTodos } = categorizeTodos(todos);
+  const { handleDragEnd } = useTodoReorder(incompleteTodos, completedTodos, onReorder);
 
   return (
     <DndContext

@@ -1,5 +1,7 @@
+export type TodoId = string;
+
 export interface Todo {
-  id: string | number;
+  id: TodoId;
   title: string;
   completed: boolean;
   createdAt: string;
@@ -13,4 +15,10 @@ export interface CreateTodoInput {
 export interface UpdateTodoInput {
   title?: string;
   completed?: boolean;
+}
+
+export interface TodoHandlers {
+  onToggle: (id: TodoId) => Promise<void>;
+  onDelete: (id: TodoId) => Promise<void>;
+  onReorder?: (todos: Todo[]) => Promise<void>;
 }

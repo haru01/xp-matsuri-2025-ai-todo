@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { Todo, CreateTodoInput, UpdateTodoInput } from '../types/todo';
+import type { Todo, TodoId, CreateTodoInput, UpdateTodoInput } from '../types/todo';
 
 const API_BASE_URL = '/api';
 
@@ -27,12 +27,12 @@ export const todoApi = {
     return response.data;
   },
 
-  async update(id: string | number, input: UpdateTodoInput): Promise<Todo> {
+  async update(id: TodoId, input: UpdateTodoInput): Promise<Todo> {
     const response = await api.patch<Todo>(`/todos/${id}`, input);
     return response.data;
   },
 
-  async delete(id: string | number): Promise<void> {
+  async delete(id: TodoId): Promise<void> {
     await api.delete(`/todos/${id}`);
   },
 

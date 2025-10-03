@@ -1,13 +1,13 @@
 import React from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import type { Todo } from '../types/todo';
+import type { Todo, TodoId } from '../types/todo';
 import styles from './TodoItem.module.css';
 
 interface TodoItemProps {
   todo: Todo;
-  onToggle: (id: string | number) => Promise<void>;
-  onDelete: (id: string | number) => Promise<void>;
+  onToggle: (id: TodoId) => Promise<void>;
+  onDelete: (id: TodoId) => Promise<void>;
 }
 
 export const TodoItem: React.FC<TodoItemProps> = ({ todo, onToggle, onDelete }) => {

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { todoApi } from '../api/todoApi';
-import type { Todo, CreateTodoInput, UpdateTodoInput } from '../types/todo';
+import type { Todo, TodoId, CreateTodoInput, UpdateTodoInput } from '../types/todo';
 
 export const useTodos = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -33,7 +33,7 @@ export const useTodos = () => {
     }
   }, []);
 
-  const updateTodo = useCallback(async (id: string | number, input: UpdateTodoInput) => {
+  const updateTodo = useCallback(async (id: TodoId, input: UpdateTodoInput) => {
     try {
       const updatedTodo = await todoApi.update(id, input);
       setTodos(prev => prev.map(todo =>
@@ -47,7 +47,7 @@ export const useTodos = () => {
     }
   }, []);
 
-  const deleteTodo = useCallback(async (id: string | number) => {
+  const deleteTodo = useCallback(async (id: TodoId) => {
     try {
       await todoApi.delete(id);
       setTodos(prev => prev.filter(todo => todo.id !== id));
@@ -58,7 +58,7 @@ export const useTodos = () => {
     }
   }, []);
 
-  const toggleTodo = useCallback(async (id: string | number) => {
+  const toggleTodo = useCallback(async (id: TodoId) => {
     const todo = todos.find(t => t.id === id);
     if (todo) {
       await updateTodo(id, { completed: !todo.completed });
@@ -66,8 +66,9 @@ export const useTodos = () => {
   }, [todos, updateTodo]);
 
   const reorderTodos = useCallback(async (reorderedTodos: Todo[]) => {
+    const previousTodos = [...todos];
+
     try {
-      const previousTodos = [...todos];
       setTodos(reorderedTodos);
 
       const updates = reorderedTodos.map((todo, index) => ({
@@ -76,7 +77,7 @@ export const useTodos = () => {
       }));
       await todoApi.reorderAll(updates);
     } catch (err) {
-      setTodos(todos);
+      setTodos(previousTodos);
       setError('TODOの並び替えに失敗しました');
       console.error('Failed to reorder todos:', err);
       throw err;
